@@ -57,7 +57,7 @@ speaker:
     channel: mono
 
 voice_assistant:
-  id: va
+  #id: va
   microphone: i2s_mic
   speaker: i2s_media
   noise_suppression_level: "4"
