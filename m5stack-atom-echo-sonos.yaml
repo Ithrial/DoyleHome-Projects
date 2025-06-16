@@ -44,22 +44,22 @@ i2s_audio:
 
 microphone:
   - platform: i2s_audio
-    id: echo_microphone
+    id: i2s_mic
     i2s_din_pin: GPIO23
     adc_type: external
     pdm: true
 
 speaker:
   - platform: i2s_audio
-    id: echo_speaker
+    id: i2s_spk
     i2s_dout_pin: GPIO21
     dac_type: external
     channel: mono
 
 voice_assistant:
   id: va
-  microphone: echo_microphone
-  speaker: echo_speaker
+  microphone: i2s_mic
+  speaker: i2s_media
   noise_suppression_level: "4"
   auto_gain: 31dBFS
   volume_multiplier: 2.0
