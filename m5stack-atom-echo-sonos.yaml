@@ -63,7 +63,7 @@ voice_assistant:
   noise_suppression_level: "4"
   auto_gain: 31dBFS
   volume_multiplier: 2.0
-  vad_threshold: 1
+  #vad_threshold: 1
   on_listening:
     - light.turn_on:
         id: led
