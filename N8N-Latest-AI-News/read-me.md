@@ -35,7 +35,7 @@ Find the top 10 latest AI news stories since $today.
 
 Use Searxng to get those URLS then use Jina AI to get the data. 
 
-When you have the best stories,  use the send the email tool to send an email to ithrial@gmail.com with the 
+When you have the best stories,  use the send the email tool to send an email to my email with the 
 subject "Latest AI News since $today" . Organize the contents in memory in the following structure:
 
 “Story Title”
