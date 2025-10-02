@@ -119,7 +119,7 @@
     },
     {
       "parameters": {
-        "fromEmail": "n8n@doyle.house",
+        "fromEmail": "YOUR_N8N_INSTANCE_EMAIL",
         "toEmail": "YOUR_EMAIL_HERE",
         "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
         "emailFormat": "text",
