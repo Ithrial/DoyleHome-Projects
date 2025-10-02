@@ -6,8 +6,6 @@ I limited the agent to only fild stories SINCE the last time the agent ran, whic
 <img width="1617" height="1213" alt="image" src="https://github.com/user-attachments/assets/3c3cb8d2-e565-428d-8b95-1e57b1fa4574" />
 
 
-
-
 So every 3 days at 6am, I'd get an email some of the latest AI stories. BUT more importantly was the formatting.
 The email was formatted in the following way:
 
