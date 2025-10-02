@@ -23,11 +23,11 @@ So this Latest AI News Agent, but really could be any information gathering agen
 
 1) Cron Schedule - currently runs every 72 hours
 2) AI Agent that leverages:
-    A) Ollama (GPT-OSS:20B but can be any model)
-    B) Simple Memory (didnt feel the need to use my postgres for this)
-    C) Local instance of SearXNG - ensure you have JSON as described in the Node docs
-    D) Jina AI - Free APi for scraping single URLs
-    E) SMTP Email - Using Googles Application Password
+   - Ollama (GPT-OSS:20B but can be any model)
+   - Simple Memory (didnt feel the need to use my postgres for this)
+   - Local instance of SearXNG - ensure you have JSON as described in the Node docs
+   - Jina AI - Free APi for scraping single URLs
+   - SMTP Email - Using Googles Application Password
 
 AI agent gets the following prompt:
 
