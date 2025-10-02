@@ -3,6 +3,11 @@ Perplexity's Tasks to do for me. Basically I wanted to have a quick news report
 give me what was going on in the news every few days. However, to avoid repetitve news stories
 I limited the agent to only fild stories SINCE the last time the agent ran, which was every 3 days.
 
+<img width="1617" height="1213" alt="image" src="https://github.com/user-attachments/assets/3c3cb8d2-e565-428d-8b95-1e57b1fa4574" />
+
+
+
+
 So every 3 days at 6am, I'd get an email some of the latest AI stories. BUT more importantly was the formatting.
 The email was formatted in the following way:
 
