@@ -3,31 +3,10 @@
   "nodes": [
     {
       "parameters": {
-        "triggerTimes": {
-          "item": [
-            {
-              "mode": "everyX",
-              "value": 72
-            }
-          ]
-        }
-      },
-      "name": "Cron Trigger",
-      "type": "n8n-nodes-base.cron",
-      "typeVersion": 1,
-      "position": [
-        -64,
-        48
-      ],
-      "id": "74010ac0-72a1-4680-aa68-ed0dd229bba3"
-    },
-    {
-      "parameters": {
         "model": "gpt-oss:latest",
         "options": {
           "temperature": 0.6,
-          "numCtx": 132000,
-          "numPredict": 16384
+          "numCtx": 132000
         }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
@@ -41,7 +20,7 @@
       "credentials": {
         "ollamaApi": {
           "id": "2lcNN8sduCLe6Bl1",
-          "name": "YOUR_OLLAMA_SERVER"
+          "name": "OLLAMA_INSTANCE"
         }
       }
     },
@@ -55,15 +34,15 @@
       "type": "@n8n/n8n-nodes-langchain.toolSearXng",
       "typeVersion": 1,
       "position": [
-        496,
-        352
+        624,
+        224
       ],
       "id": "a78ea534-c297-4936-babc-48ad488e8868",
       "name": "SearXNG",
       "credentials": {
         "searXngApi": {
           "id": "UE2S2QokI5fLsgo0",
-          "name": "YOUR_SEARXNG_ACCOUNT"
+          "name": "SearXNG account"
         }
       }
     },
@@ -76,22 +55,22 @@
       "type": "n8n-nodes-base.jinaAiTool",
       "typeVersion": 1,
       "position": [
-        368,
-        336
+        480,
+        256
       ],
       "id": "c2cb0990-72c5-4e48-890e-533165feb3fc",
       "name": "Read URL content in Jina AI",
       "credentials": {
         "jinaAiApi": {
           "id": "DRFoGEmLhJgdF582",
-          "name": "YOUR_JINAAI_ACCOUNT"
+          "name": "Jina AI account"
         }
       }
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "You are a news reporter, looking for the best example of the latest AI news stories since $today and build a top 10 list. Avoid the homepage/landing page of AInews.com or artificialintelligence-news.com (as an example) and prioritize specific news-worthy stories or events.  \n\nUse Searxng to get those URLS then use Jina AI to get the data. \n\nWhen you have the best stories, use the send the email tool to send an email to YOUR_EMAIL with the subject \"Latest AI News since $today\". Organize the contents in memory in the following structure:\n\n“Story Title”\nProvide the Clickable Link to the story\nSummary of the Article/Story\n“Provide insight as to Why it's important to the world of AI”\n“Provide insight as to Why it's important to me in my local AI endeavors”\n\nBe sure to ALWAYS send the email of news stories and end the email with a whimsical sign off and sign your name, MODEL_NAME \n\n\n",
+        "text": "You are a news reporter, looking for the best example of the latest AI news stories since $today and build a top 10 list. Avoid the homepage/landing page of AInews.com or artificialintelligence-news.com (as an example) and prioritize specific news-worthy stories or events.  \n\nUse Searxng to get those URLS then use Jina AI to get the data. \n\nWhen you have the best stories, use the send the email tool to send an email to YOUR_EMAIL with the subject \"Latest AI News since $today\". Organize the contents in memory in the following structure:\n\n“Story Title”\nProvide the Clickable Link to the story\nSummary of the Article/Story\n“Provide insight as to Why it's important to the world of AI”\n“Provide insight as to Why it's important to me in my local AI endeavors”\n\nBe sure to ALWAYS send the email of news stories and end the email with a whimsical sign off and sign your name, Spark\n\n\n",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -106,7 +85,8 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "AINews"
+        "sessionKey": "AINews",
+        "contextWindowLength": 30
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
@@ -119,18 +99,19 @@
     },
     {
       "parameters": {
-        "fromEmail": "YOUR_N8N_INSTANCE_EMAIL",
-        "toEmail": "YOUR_EMAIL_HERE",
+        "fromEmail": "LLM_EMAIL",
+        "toEmail": "YOUR_EMAIL",
         "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
-        "emailFormat": "text",
+        "emailFormat": "both",
         "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', ``, 'string') }}",
+        "html": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('HTML', ``, 'string') }}",
         "options": {}
       },
       "type": "n8n-nodes-base.emailSendTool",
       "typeVersion": 2.1,
       "position": [
-        240,
-        448
+        384,
+        384
       ],
       "id": "9f94d63c-101e-4dea-9987-c51493b42b34",
       "name": "Send email in Send Email",
@@ -138,9 +119,29 @@
       "credentials": {
         "smtp": {
           "id": "a22wYjcaTSprUHLi",
-          "name": "YOUR_SMTP_ACCOUNT_HERE"
+          "name": "SMTP account"
         }
       }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 3,
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        48
+      ],
+      "id": "22f13d53-1250-4088-8acd-00fa440574b1",
+      "name": "Schedule Trigger"
     }
   ],
   "pinData": {},
@@ -162,17 +163,6 @@
           {
             "node": "AI Agent",
             "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cron Trigger": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
             "index": 0
           }
         ]
@@ -215,13 +205,24 @@
           }
         ]
       ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "43fcb407-f2b4-4cde-8558-9beedfd11f4a",
+  "versionId": "e4acf05c-7efe-49fe-8527-145f501e1283",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "e5b9f2720b40b018a90679953a4fc8764479cb3c3a431ec2dfbd71892d6a0822"
