@@ -91,7 +91,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "Find the top 10 latest AI news stories since $today. \n\nUse Searxng to get those URLS then use Jina AI to get the data. \n\nWhen you have the best stories,  use the send the email tool to send an email to "YOUR_EMAIL_HERE" with the subject \"Latest AI News since $today\" . Organize the contents in memory in the following structure:\n\n“Story Title”\nProvide the Clickable Link to the story\nSummary of the Article/Story\n“Provide insight as to Why its important to the world of AI”\n“Provide insight as to Why its important to me in my local AI endeavors”\n\n\n",
+        "text": "You are a news reporter, looking for the best example of the latest AI news stories since $today and build a top 10 list. Avoid the homepage/landing page of AInews.com or artificialintelligence-news.com (as an example) and prioritize specific news-worthy stories or events.  \n\nUse Searxng to get those URLS then use Jina AI to get the data. \n\nWhen you have the best stories, use the send the email tool to send an email to YOUR_EMAIL with the subject \"Latest AI News since $today\". Organize the contents in memory in the following structure:\n\n“Story Title”\nProvide the Clickable Link to the story\nSummary of the Article/Story\n“Provide insight as to Why it's important to the world of AI”\n“Provide insight as to Why it's important to me in my local AI endeavors”\n\nBe sure to ALWAYS send the email of news stories and end the email with a whimsical sign off and sign your name, MODEL_NAME \n\n\n",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
