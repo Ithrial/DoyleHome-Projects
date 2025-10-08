@@ -1,0 +1,233 @@
+{
+  "name": "Latest AI News",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "gpt-oss:latest",
+        "options": {
+          "temperature": 0.6,
+          "numCtx": 132000
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        336
+      ],
+      "id": "d6fa0143-508b-44f7-8442-71fd1d9fd491",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "2lcNN8sduCLe6Bl1",
+          "name": "$YourOllamaCredentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "numResults": "=10",
+          "pageNumber": 1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSearXng",
+      "typeVersion": 1,
+      "position": [
+        256,
+        368
+      ],
+      "id": "a78ea534-c297-4936-babc-48ad488e8868",
+      "name": "SearXNG",
+      "credentials": {
+        "searXngApi": {
+          "id": "UE2S2QokI5fLsgo0",
+          "name": "SearXNG account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to extract the full article content from a webpage URL. Input: a single URL string. Call this tool for each URL you get from Searxng to scrape the title, body text, and summary of the article.",
+        "url": "={{ $fromAI('URL', ``, 'string') }}",
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.jinaAiTool",
+      "typeVersion": 1,
+      "position": [
+        416,
+        352
+      ],
+      "id": "c2cb0990-72c5-4e48-890e-533165feb3fc",
+      "name": "Read URL content in Jina AI",
+      "credentials": {
+        "jinaAiApi": {
+          "id": "DRFoGEmLhJgdF582",
+          "name": "Jina AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": " You are an autonomous AI Agent that must produce a top‑10 list of the most recent AI news stories as of **$today**.  \n \n **Step 1 – Search**  \n Use the **Searxng** tool to find the 10 newest AI stories that are no older than 3 days from $today.  \n - Do **not** include generic news‑portal homepages or sites that simply aggregate other articles (e.g., AInews.com, artificialintelligence‑news.com, or any site that serves only a list of links).  \n - Focus on high‑quality, single‑story pages that provide real news or event coverage.  \n \n **Step 2 – Scrape**  \n For each URL returned by Searxng, call the **Jina AI** tool to scrape the page and extract:  \n 1. Title of the story  \n 2. Clickable link (the URL itself)  \n 3. One‑paragraph summary of the article  \n 4. A brief reflection on why the story matters to the global AI community  \n 5. A brief reflection on why the story matters to the user’s local AI projects  \n \n **Step 3 – Store**  \n Keep the extracted information in memory, formatting it as follows (one story per line, numbered 1‑10):  \n ```\n 1. <Title>\n Link: <URL>\n Summary: <one‑paragraph summary>\n Global impact: <why it matters globally>\n Local impact: <why it matters locally>\n ```  \n \n **Step 4 – Send email**  \n After you have the top 10 stories, **you must call the Send Email tool**. Do not skip this step.  \n Provide the tool call with the following arguments exactly:  \n - `from`: `$outboundemail`  \n - `to`: `$inboundemail`  \n - `subject`: `Latest AI News as of $today`  \n - `body`: *the formatted list of the 10 news stories you stored in memory*  \n - `signature`: `Spark`  \n \n **Important**  \n - The email body must contain the full formatted list.  \n - If no stories are found, the body should read:  \n   `No new AI news stories were found for $today.`  \n - The tool call must be the last thing the agent outputs; no additional text should follow.  \n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        48
+      ],
+      "id": "2bb4136b-0ae0-4d5b-b488-e9963da96124",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "fromEmail": "$outboundemail",
+        "toEmail": "$inboundemail",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailFormat": "both",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', ``, 'string') }}",
+        "html": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('HTML', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSendTool",
+      "typeVersion": 2.1,
+      "position": [
+        592,
+        304
+      ],
+      "id": "9f94d63c-101e-4dea-9987-c51493b42b34",
+      "name": "Send email in Send Email",
+      "webhookId": "e2a81e83-68ee-4583-948b-07d1c523cfdd",
+      "credentials": {
+        "smtp": {
+          "id": "a22wYjcaTSprUHLi",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        48
+      ],
+      "id": "22f13d53-1250-4088-8acd-00fa440574b1",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "AI News"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        352
+      ],
+      "id": "d46417d5-a37f-4f15-8249-6e36947e86a0",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearXNG": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read URL content in Jina AI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Send email in Send Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "88cb17c7-e142-4ffa-98e9-565d7df5450a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e5b9f2720b40b018a90679953a4fc8764479cb3c3a431ec2dfbd71892d6a0822"
+  },
+  "id": "s982vhcn3zUGZKwu",
+  "tags": []
+}
